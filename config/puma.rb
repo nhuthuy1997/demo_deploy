@@ -9,7 +9,7 @@ root_dir = Dir.pwd
 #
 environment ENV.fetch("RAILS_ENV") { "#{ENV['RAILS_ENV']}" }
 
-daemonize false
+daemonize true
 
 pidfile File.join(root_dir, "tmp", "pids", "puma.pid")
 

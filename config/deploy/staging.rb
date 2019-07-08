@@ -2,7 +2,6 @@ if ENV["LOCAL_DEPLOY"]
   server "localhost", user: "ec2-user", roles: %w(app db)
 else
   instances = fetch(:instances)
-
   instances.each do |role_name, hosts|
     roles = [role_name]
     hosts.each_with_index do |host, i|
@@ -11,3 +10,4 @@ else
     end
   end
 end
+# server '13.230.206.34', user: 'ec2-user', roles: %w(app db)

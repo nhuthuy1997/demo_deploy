@@ -1,11 +1,11 @@
 require_relative "deploy/aws_utils"
 require_relative "deploy/instance_utils"
 require_relative "deploy/syns_env"
-
+require "byebug"
 lock "~> 3.11.0"
 
 set :application, "demo_deploy"
-set :repo_url, "git@github.com:oBuiVanQuynh/demo_deploy.git"
+set :repo_url, "git@github.com:nhuthuy1997/demo_deploy.git"
 set :assets_roles, [:app]
 set :deploy_ref, ENV["DEPLOY_REF"]
 set :deploy_ref_type, ENV["DEPLOY_REF_TYPE"]
@@ -29,8 +29,7 @@ platform = ENV["PLATFORM"] || "aws"
 set :platform, platform
 
 set :settings, YAML.load_file(ENV["SETTING_FILE"] ||"config/deploy/settings.yml")
-set :instances, platform == "aws" ? get_ec2_targets : get_instance_targets unless ENV["LOCAL_DEPLOY"]
-
+set :instances, platform == "aws" ? get_ec2_targets : get_instance_targets
 set :deploy_via,      :remote_cache
 set :puma_bind,       "unix://#{shared_path}/tmp/sockets/puma.sock"
 set :puma_state,      "#{shared_path}/tmp/pids/puma.state"
@@ -38,13 +37,14 @@ set :puma_pid,        "#{shared_path}/tmp/pids/puma.pid"
 set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, true
+set :puma_threads,    [4, 16]
+set :puma_workers,    0
 
 upload_env unless ENV["LOCAL_DEPLOY"]
 
 default_linked_files = [
   "config/application.yml",
   "config/database.yml",
-  "config/master.key",
   "config/credentials.yml.enc",
 ]
 settings_linked_files = fetch(:settings)["linked_files"]
@@ -59,7 +59,7 @@ namespace :deploy do
   task :link_env do
     on roles(:all) do
       update_env if ENV["LOCAL_DEPLOY"]
-      upload! "/home/ec2-user/demo_deploy/config/application.yml", "#{shared_path}/config/application.yml"
+      upload! "/home/framgia/demo/demo_deploy/config/application.yml", "#{shared_path}/config/application.yml"
     end
   end
 
@@ -89,6 +89,7 @@ namespace :deploy do
           execute "sudo service puma start"
         end
       end
+      # execute "cd #{fetch(:deploy_to)}/current && rails s"
     end
 
     on roles(:worker), in: :sequence, wait: 5 do

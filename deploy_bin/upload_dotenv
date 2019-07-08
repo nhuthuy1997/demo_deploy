@@ -9,7 +9,7 @@ def error_exit msg
 end
 
 S3_DOTENV_PATH = "ec2_setting_files/dotenv"
-LOCAL_DOTENV_PATH = "/home/deploy/.env"
+LOCAL_DOTENV_PATH = "/home/ec2-user/.env"
 
 s3 = Aws::S3::Resource.new region: ENV["AWS_REGION"]
 bucket = s3.bucket ENV["S3_BUCKET_NAME"]

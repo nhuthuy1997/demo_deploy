@@ -2,7 +2,7 @@ require "aws-sdk"
 require "fileutils"
 
 S3_DOTENV_PATH = "ec2_setting_files/application.yml"
-LOCAL_DOTENV_PATH = "/home/ec2-user/demo_deploy/config/application.yml"
+LOCAL_DOTENV_PATH = "/home/framgia/demo/demo_deploy/config/application.yml"
 
 def error_exit msg
   STDERR.puts "[ERROR] #{msg}"

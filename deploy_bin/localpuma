@@ -1,2 +1,2 @@
-cd /home/deploy/demo_deploy
+cd /home/ec2-user/demo_deploy
 LOCAL_DEPLOY=true DEPLOY_REF=dummy bundle exec cap $RAILS_ENV puma:$1
